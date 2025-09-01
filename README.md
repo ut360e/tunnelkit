@@ -84,31 +84,6 @@ TunnelKit can parse .ovpn configuration files. Below are a few details worth men
 
 Many other flags are ignored too but it's normally not an issue.
 
-## WireGuard
-
-TunnelKit offers a user-friendly API to the modern [WireGuard®][dep-wireguard] protocol.
-
-### Manual Xcode steps
-
-If you add any `TunnelKitWireGuard*` Swift package to the "Link with binary libraries" section of your app or tunnel extension, you are bound to hit this error:
-
-```
-ld: library not found for -lwg-go
-```
-
-because part of the WireGuardKit package is based on `make`, which SwiftPM doesn't support yet.
-
-Therefore, make sure to follow the steps below for proper integration:
-
-- Copy `Scripts/build_wireguard_go_bridge.sh` somewhere in your project.
-- In Xcode, click File -> New -> Target. Switch to "Other" tab and choose "External Build System".
-- Type a name for your target.
-- Open the "Info" tab and replace `/usr/bin/make` with `$(PROJECT_DIR)/path/to/build_wireguard_go_bridge.sh` in "Build Tool".
-- Switch to "Build Settings" and find SDKROOT. Type in `macosx` if you target macOS, or type in `iphoneos` if you target iOS.
-- Locate your tunnel extension target and switch to "Build Phases" tab.
-- Locate "Dependencies" section and hit "+" to add the target you have just created.
-- Repeat the process for each platform.
-
 ## Installation
 
 ### Requirements
@@ -119,24 +94,6 @@ Therefore, make sure to follow the steps below for proper integration:
 - golang (for WireGuardKit)
 
 It's highly recommended to use the Git package provided by [Homebrew][dep-brew].
-
-### Caveats
-
-Make sure to set "Enable Bitcode" (iOS) to NO, otherwise the library [would not be able to link OpenSSL][about-pr-bitcode] (OpenVPN) and the `wg-go` bridge (WireGuard).
-
-Recent versions of Xcode (latest is 13.1) have an issue where the "Frameworks" directory is replicated inside application extensions. This is not a blocker during development, but will prevent your archive from being validated against App Store Connect due to the following error:
-
-    ERROR ITMS-90206: "Invalid Bundle. The bundle at '*.appex' contains disallowed file 'Frameworks'."
-
-You will need to add a "Run Script" phase to your main app target where you manually remove the offending folder, i.e.:
-
-    rm -rf "${BUILT_PRODUCTS_DIR}/${PLUGINS_FOLDER_PATH}/YourTunnelTarget.appex/Frameworks"
-
-for iOS and:
-
-    rm -rf "${BUILT_PRODUCTS_DIR}/${PLUGINS_FOLDER_PATH}/YourTunnelTarget.appex/Contents/Frameworks"
-
-for macOS.
 
 ### Demo
 
@@ -190,14 +147,6 @@ Provides the entities to interact with the OpenVPN tunnel.
 ### TunnelKitOpenVPNAppExtension
 
 Contains the `NEPacketTunnelProvider` implementation of a OpenVPN tunnel.
-
-### TunnelKitWireGuard
-
-Provides the entities to interact with the WireGuard tunnel.
-
-### TunnelKitWireGuardAppExtension
-
-Contains the `NEPacketTunnelProvider` implementation of a WireGuard tunnel.
 
 ## License
 
@@ -257,7 +206,6 @@ Website: [passepartoutvpn.app][about-website]
 
 [dep-brew]: https://brew.sh/
 [dep-openvpn]: https://openvpn.net/index.php/open-source/overview.html
-[dep-wireguard]: https://www.wireguard.com/
 [dep-openssl]: https://www.openssl.org/
 
 [ne-home]: https://developer.apple.com/documentation/networkextension
