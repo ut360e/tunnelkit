@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "grpc-binary",
+      "identity" : "openssl-apple",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/google/grpc-binary.git",
+      "location" : "https://github.com/passepartoutvpn/openssl-apple",
       "state" : {
-        "revision" : "e9fad491d0673bdda7063a0341fb6b47a30c5359",
-        "version" : "1.62.2"
+        "revision" : "026702febcaebcbf9ea68f2fa66b017eba998cdf",
+        "version" : "3.2.105"
       }
     },
     {
